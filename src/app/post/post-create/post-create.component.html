@@ -1,14 +1,16 @@
-<mat-card>
-  <mat-form-field>
-    <textarea rows="1" matInput [(ngModel)]="former_text"></textarea>
-    <hr />
-    <button mat-raised-button color="warn" (click)="onAddPost()">
-      Save Men
-    </button>
-  </mat-form-field>
-</mat-card>
+<div style="width: 50%;margin: 0 auto;">
+  <mat-card>
+    <mat-form-field>
+      <textarea rows="1" matInput [(ngModel)]="former_text"></textarea>
+      <hr />
+      <button mat-raised-button color="warn" (click)="onAddPost()">
+        Save Men
+      </button>
+    </mat-form-field>
+  </mat-card>
+</div>
 
-<div style="width: 100%; display: flex; justify-content: center;scale: 5;margin-top: 15%;">
+<div style="width: 100%; display: flex; justify-content: center; scale: 5; margin-top: 15%">
   <p>
     {{ entered_text }}
   </p>
