@@ -5,5 +5,9 @@ import { Component } from "@angular/core";
 	templateUrl: "./post-create.component.html",
 })
 export class PostCreateComponent {
-	// Your component logic here
+	entered_text = "";
+	former_text = "something";
+	onAddPost() {
+		this.entered_text = this.former_text;
+	}
 }
