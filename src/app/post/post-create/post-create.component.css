@@ -1,5 +1,7 @@
 button {
   margin: auto;
+  margin-bottom: 1rem;
+    margin-left: 1rem;
 }
 
 mat-form-field, textarea {
