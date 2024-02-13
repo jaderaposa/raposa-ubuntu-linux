@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Post } from './post/post.model';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +7,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'raposa-ubuntu-linux';
+  storedPosts: Post[] = [];
+
+  onPostAdded(post: Post) {
+    this.storedPosts.push(post);
+  }
 }

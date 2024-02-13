@@ -1,12 +1,8 @@
-.container {
-  width: 50%;
-  margin: 0 auto;
+button {
+  margin: auto;
 }
 
-.display {
+mat-form-field, textarea {
   width: 100%;
-  display: flex;
-  justify-content: center;
-  scale: 5;
-  margin-top: 15%
+  margin: auto;
 }
