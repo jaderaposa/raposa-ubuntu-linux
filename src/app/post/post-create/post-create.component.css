@@ -1,0 +1,12 @@
+.container {
+  width: 50%;
+  margin: 0 auto;
+}
+
+.display {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  scale: 5;
+  margin-top: 15%
+}
