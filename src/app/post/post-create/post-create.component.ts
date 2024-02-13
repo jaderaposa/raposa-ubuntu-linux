@@ -22,4 +22,4 @@ export class PostCreateComponent {
 		};
 		this.postCreated.emit(post);
 	}
-}
+} 
