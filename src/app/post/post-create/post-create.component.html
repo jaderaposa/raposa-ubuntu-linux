@@ -3,8 +3,8 @@
 		(submit)="onAddPost(postForm)"
 		#postForm="ngForm">
 		<mat-form-field>
-			<input
-				placeholder="Post Title"
+      <mat-label>Title</mat-label>
+      <input
 				matInput
 				type="text"
 				name="title"
@@ -14,8 +14,8 @@
 			<mat-error *ngIf="title.invalid">Please Enter A Post Title</mat-error>
 		</mat-form-field>
 		<mat-form-field>
-			<textarea
-				placeholder="Post Content"
+      <mat-label>Content</mat-label>
+      <textarea
 				matInput
 				rows="4"
 				name="content"
