@@ -16,6 +16,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { PostListComponent } from "./post/post-list/post-list.component";
 import { MatExpansionModule } from "@angular/material/expansion";
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
 	declarations: [AppComponent, PostCreateComponent, HeaderComponent, PostListComponent],
@@ -32,6 +33,7 @@ import { MatExpansionModule } from "@angular/material/expansion";
 		MatIconModule,
 		MatProgressSpinnerModule,
     MatExpansionModule,
+    HttpClientModule
 	],
 	providers: [],
 	bootstrap: [AppComponent],

@@ -15,10 +15,11 @@ export class PostCreateComponent {
   constructor(public postsService : PostsService ){}
 
 	@Output() postCreated = new EventEmitter<Post>();
-	onAddPost(form: NgForm) {
-		if (form.invalid) {
-			return;
-		}
-		this.postsService
-	}
+  onAddPost(form: NgForm) {
+    if (form.invalid) {
+      return;
+    }
+    this.postsService.addPost(form.value.title, form.value.content);
+    form.resetForm();
+  }
 }
