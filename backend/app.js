@@ -6,66 +6,67 @@ const cors = require("cors");
 const app = express();
 
 mongoose
-    .connect("mongodb+srv://jaderaposa:jademongodatabase@jadedb.gb4oedl.mongodb.net/node-angular?retryWrites=true&w=majority&appName=JadeDB")
-    .then(() => {
-        console.log("Connected to database!");
-    })
-    .catch(() => {
-        console.log("Connection failed!");
-    });
+	.connect("mongodb+srv://jaderaposa:jademongodatabase@jadedb.gb4oedl.mongodb.net/node-angular?retryWrites=true&w=majority&appName=JadeDB")
+	.then(() => {
+		console.log("Connected to database!");
+	})
+	.catch(() => {
+		console.log("Connection failed!");
+	});
 
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use((req, res, next) => {
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS");
-    next();
+	res.setHeader("Access-Control-Allow-Origin", "*");
+	res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS");
+	next();
 });
 
 app.post("/api/posts", (req, res, next) => {
-  const post = new Post({
-    title: req.body.title,
-    content: req.body.content
-  });
-  post.save().then(createdPost => {
-    res.status(201).json({
-      message: "Post added successfully",
-      postId: createdPost._id
-    });
-  });
+	const post = new Post({
+		title: req.body.title,
+		content: req.body.content,
+	});
+	post.save().then((createdPost) => {
+		res.status(201).json({
+			message: "Post added successfully",
+			postId: createdPost._id,
+		});
+	});
 });
 
 app.get("/api/posts", (req, res, next) => {
-  const posts = [
-    {
-      id: "fadf12421l",
-      title: "First server-side post",
-      content: "This is coming from the server",
-    },
-    {
-      id: "ksajflaj132",
-      title: "Second server-side post",
-      content: "This is coming from the server!",
-    },
-  ];
+	const posts = [
+		{
+			id: "fadf12421l",
+			title: "First server-side post",
+			content: "This is coming from the server",
+		},
+		{
+			id: "ksajflaj132",
+			title: "Second server-side post",
+			content: "This is coming from the server!",
+		},
+	];
 
-  Post.find().then(documents => {
-    const allPosts = posts.concat(documents);
-    res.status(200).json({
-      message: "Posts fetched successfully!",
-      posts: allPosts,
-    });
-  });
-});
-
-app.get("/posts", (req, res, next) => {
-  Post.find().then(documents => {
-    const allPosts = posts.concat(documents);
-    res.json(allPosts);
-  });
+	Post.find().then((documents) => {
+		const allPosts = posts.concat(
+			documents.map((document) => {
+				return {
+					id: document._id.toString(),
+					title: document.title,
+					content: document.content,
+				};
+			})
+		);
+		res.status(200).json({
+			message: "Posts fetched successfully!",
+			posts: allPosts,
+		});
+	});
 });
 
 module.exports = app;
