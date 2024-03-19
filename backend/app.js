@@ -69,4 +69,13 @@ app.get("/api/posts", (req, res, next) => {
 	});
 });
 
+// Add the DELETE route here
+app.delete('/api/posts/:id', (req, res) => {
+  const postId = req.params.id;
+  Post.findByIdAndDelete(postId)
+     .then(() => res.status(200).send({ message: 'Post deleted successfully' }))
+     .catch(err => res.status(500).send({ message: 'Error deleting post', error: err }));
+ });
+
+
 module.exports = app;
