@@ -7,6 +7,7 @@ const routes: Routes = [
   { path: 'create', component: PostCreateComponent },
   { path: 'list', component: PostListComponent },
   { path: '', redirectTo: '/list', pathMatch: 'full' },
+  { path: 'create/:postId', component: PostCreateComponent },
 ];
 
 @NgModule({

@@ -38,6 +38,21 @@ app.post("/api/posts", (req, res, next) => {
 	});
 });
 
+app.put("/api/posts/:id", (req, res, next) => {
+	const post = new Post({
+		_id: req.body.id,
+		title: req.body.title,
+		content: req.body.content,
+	});
+	Post.updateOne({ _id: req.params.id }, post)
+		.then((result) => {
+			res.status(200).json({ message: "Update successful!" });
+		})
+		.catch((error) => {
+			res.status(500).json({ message: "An error occurred!" });
+		});
+});
+
 app.get("/api/posts", (req, res, next) => {
 	const posts = [
 		{
@@ -50,7 +65,7 @@ app.get("/api/posts", (req, res, next) => {
 			title: "Second server-side post",
 			content: "This is coming from the server!",
 		},
-	];
+  ];
 
 	Post.find().then((documents) => {
 		const allPosts = posts.concat(
@@ -67,6 +82,23 @@ app.get("/api/posts", (req, res, next) => {
 			posts: allPosts,
 		});
 	});
+});
+
+app.get("/api/posts/:id", (req, res, next) => {
+	const postId = req.params.id;
+	Post.findById(postId)
+		.then((post) => {
+			if (post) {
+				res.status(200).json(post);
+			} else {
+				res.status(404).json({ message: "Post not found!" });
+			}
+		})
+		.catch((error) => {
+			res.status(500).json({
+				message: "Fetching post failed!",
+			});
+		});
 });
 
 // Add the DELETE route here

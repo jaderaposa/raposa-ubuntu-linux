@@ -3,32 +3,40 @@
 		(submit)="onAddPost(postForm)"
 		#postForm="ngForm">
 		<mat-form-field>
-      <mat-label>Title</mat-label>
-      <input
+			<mat-label>Title</mat-label>
+			<input
 				matInput
 				type="text"
 				name="title"
-				ngModel
+				[(ngModel)]="title"
 				required
-				#title="ngModel" />
-			<mat-error *ngIf="title.invalid">Please Enter A Post Title</mat-error>
+				#titleInput="ngModel" />
+			<mat-error *ngIf="titleInput.invalid">Please Enter A Post Title</mat-error>
 		</mat-form-field>
 		<mat-form-field>
-      <mat-label>Content</mat-label>
-      <textarea
+			<mat-label>Content</mat-label>
+			<textarea
 				matInput
 				rows="4"
 				name="content"
-				ngModel
+				[(ngModel)]="content"
 				required
-				#content="ngModel">
+				#contentInput="ngModel">
 			</textarea>
-			<mat-error *ngIf="content.invalid">Please Enter A Post Content</mat-error>
+			<mat-error *ngIf="contentInput.invalid">Please Enter A Post Content</mat-error>
 		</mat-form-field>
 		<button
 			mat-raised-button
 			color="warn"
-			type="submit">
+			type="submit"
+			*ngIf="!postId">
+			Add Post
+		</button>
+		<button
+			mat-raised-button
+			color="warn"
+			type="submit"
+			*ngIf="postId">
 			Save Post
 		</button>
 	</form>

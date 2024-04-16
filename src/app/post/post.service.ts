@@ -13,6 +13,10 @@ export class PostsService {
 
   constructor(private http: HttpClient) { }
 
+  getPost(id: string) {
+    return this.http.get<{ _id: string, title: string, content: string }>('http://localhost:3000/api/posts/' + id);
+  }
+
   getPosts() {
     this.http.get<{ message: string; posts: Post[] }>(this.apiUrl).subscribe((postData) => {
       this.posts = postData.posts;
@@ -24,15 +28,26 @@ export class PostsService {
     return this.postsUpdated.asObservable();
   }
 
-  addPost(title: string, content: string) {
+  addPost(title: string, content: string): Observable<any> {
     const post: Post = { id: "", title: title, content: content };
-    this.http.post<{ message: string, postId: string }>(this.apiUrl, post).subscribe((responseData) => {
-      console.log(responseData.message);
-      // Update the post object with the ID returned from the server
-      post.id = responseData.postId;
-      this.posts.push(post);
-      this.postsUpdated.next([...this.posts]);
-    });
+    return this.http.post<{ message: string, postId: string }>(this.apiUrl, post)
+      .pipe(tap((responseData) => {
+        post.id = responseData.postId;
+        this.posts.push(post);
+        this.postsUpdated.next([...this.posts]);
+      }));
+  }
+
+  updatePost(id: string, title: string, content: string): Observable<any> {
+    const post: Post = { id, title, content };
+    return this.http.put(this.apiUrl + '/' + id, post)
+      .pipe(tap(() => {
+        const updatedPosts = [...this.posts];
+        const oldPostIndex = updatedPosts.findIndex(p => p.id === post.id);
+        updatedPosts[oldPostIndex] = post;
+        this.posts = updatedPosts;
+        this.postsUpdated.next([...this.posts]);
+      }));
   }
 
   deletePost(postId: string) {
