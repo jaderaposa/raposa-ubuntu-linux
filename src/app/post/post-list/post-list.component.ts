@@ -13,7 +13,7 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 export class PostListComponent implements OnInit, OnDestroy {
   posts: Post[] = [];
   private postsSub!: Subscription;
-  totalPosts = 10; // You will need to update this with the actual total number of posts
+  totalPosts = 1; // You will need to update this with the actual total number of posts
   postsPerPage = 5; // This is the number of posts per page
   currentPage = 1;
   @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
