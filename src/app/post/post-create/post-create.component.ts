@@ -1,6 +1,6 @@
 import { Component, Output, EventEmitter, OnInit } from "@angular/core";
 import { Post } from "../post.model";
-import { NgForm } from "@angular/forms";
+import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { PostsService } from "../post.service";
 import { Router, ActivatedRoute, ParamMap } from "@angular/router";
 
@@ -17,10 +17,17 @@ export class PostCreateComponent implements OnInit {
   isLoading = false;
   title = '';
   content = '';
+  form: FormGroup = new FormGroup({}); // Initialize form here
 
   constructor(public postsService: PostsService, private router: Router, public route: ActivatedRoute) { }
 
   ngOnInit() {
+    this.form = new FormGroup({
+      'title': new FormControl(null, { validators: [Validators.required, Validators.minLength(3)] }),
+      'content': new FormControl(null, { validators: [Validators.required] }),
+      'image': new FormControl(null) // Remove the validator here
+    });
+
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       if (paramMap.has('postId')) {
         const postIdFromRoute = paramMap.get('postId');
@@ -29,8 +36,19 @@ export class PostCreateComponent implements OnInit {
           this.isLoading = true;
           this.postsService.getPost(this.postId).subscribe(postData => {
             this.isLoading = false;
-            this.title = postData.title;
-            this.content = postData.content;
+            this.post = {
+              _id: postData._id, // Add this line
+              title: postData.title,
+              content: postData.content,
+              imagePath: postData.imagePath
+            };
+            if (this.post) { // Check if this.post is not null
+              this.form.setValue({
+                'title': this.post.title,
+                'content': this.post.content,
+                'image': this.post.imagePath
+              });
+            }
           });
         }
       } else {
@@ -43,21 +61,31 @@ export class PostCreateComponent implements OnInit {
 
   @Output() postCreated = new EventEmitter<Post>();
 
-  onAddPost(form: NgForm) {
-    if (form.invalid) {
+  onImagePicked(event: Event) {
+    const target = event.target as HTMLInputElement;
+    if (target.files && target.files.length > 0) {
+      const file = target.files[0];
+      this.form.patchValue({ image: file });
+      this.form.get('image')?.updateValueAndValidity();
+    }
+  }
+
+  onAddPost() {
+    if (this.form.invalid) {
       return;
     }
     this.isLoading = true;
     if (this.postId) {
-      this.postsService.updatePost(this.postId, form.value.title, form.value.content).subscribe(() => {
+      this.postsService.updatePost(this.postId, this.form.value.title, this.form.value.content, this.form.value.image).subscribe(() => {
         this.isLoading = false;
         this.router.navigate(['/list']);
       });
     } else {
-      this.postsService.addPost(form.value.title, form.value.content).subscribe(() => {
+      this.postsService.addPost(this.form.value.title, this.form.value.content, this.form.value.image).subscribe(() => {
         this.isLoading = false;
         this.router.navigate(['/list']);
       });
     }
+    this.form.reset();
   }
 }

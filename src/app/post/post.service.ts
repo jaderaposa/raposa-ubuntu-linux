@@ -7,14 +7,14 @@ import { tap } from "rxjs/operators";
 
 @Injectable({ providedIn: "root" })
 export class PostsService {
-  private apiUrl = "http://localhost:3000/api/posts"; // Adjusted URL to match the backend route
+  private apiUrl = "http://localhost:3000/api/posts";
   private posts: Post[] = [];
   private postsUpdated = new Subject<Post[]>();
 
   constructor(private http: HttpClient) { }
 
-  getPost(id: string) {
-    return this.http.get<{ _id: string, title: string, content: string }>('http://localhost:3000/api/posts/' + id);
+  getPost(_id: string) {
+    return this.http.get<{ _id: string, title: string, content: string, imagePath: string }>(this.apiUrl + '/' + _id);
   }
 
   getPosts() {
@@ -28,33 +28,52 @@ export class PostsService {
     return this.postsUpdated.asObservable();
   }
 
-  addPost(title: string, content: string): Observable<any> {
-    const post: Post = { id: "", title: title, content: content };
-    return this.http.post<{ message: string, postId: string }>(this.apiUrl, post)
+  addPost(title: string, content: string, image?: File): Observable<any> {
+    const postData = new FormData();
+    postData.append('title', title);
+    postData.append('content', content);
+    if (image) { // Check if image is defined
+      postData.append('image', image, title);
+    }
+    return this.http.post<{ message: string, post: Post }>(this.apiUrl, postData)
       .pipe(tap((responseData) => {
-        post.id = responseData.postId;
+        const post: Post = {
+          _id: responseData.post._id,
+          title: title,
+          content: content,
+          imagePath: responseData.post.imagePath ? responseData.post.imagePath : ""
+        };
         this.posts.push(post);
         this.postsUpdated.next([...this.posts]);
       }));
   }
 
-  updatePost(id: string, title: string, content: string): Observable<any> {
-    const post: Post = { id, title, content };
-    return this.http.put(this.apiUrl + '/' + id, post)
+  updatePost(_id: string, title: string, content: string, image?: File | string): Observable<any> {
+    let postData: Post | FormData;
+    if (image && typeof (image) === 'object') {
+      postData = new FormData();
+      postData.append('_id', _id);
+      postData.append('title', title);
+      postData.append('content', content);
+      postData.append('image', image, title);
+    } else {
+      postData = { _id: _id, title: title, content: content, imagePath: typeof image === 'string' ? image : "" };
+    }
+    return this.http.put(this.apiUrl + '/' + _id, postData)
       .pipe(tap(() => {
         const updatedPosts = [...this.posts];
-        const oldPostIndex = updatedPosts.findIndex(p => p.id === post.id);
-        updatedPosts[oldPostIndex] = post;
+        const oldPostIndex = updatedPosts.findIndex(p => p._id === _id);
+        updatedPosts[oldPostIndex] = { _id: _id, title: title, content: content, imagePath: "" };
         this.posts = updatedPosts;
         this.postsUpdated.next([...this.posts]);
       }));
   }
 
   deletePost(postId: string) {
-    this.http.delete('http://localhost:3000/api/posts/' + postId)
+    this.http.delete(this.apiUrl + '/' + postId)
       .subscribe(() => {
         console.log('Deleted: ' + postId);
-        this.posts = this.posts.filter(post => post.id !== postId);
+        this.posts = this.posts.filter(post => post._id !== postId);
         this.postsUpdated.next([...this.posts]);
       });
   }

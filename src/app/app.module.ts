@@ -19,6 +19,7 @@ import { MatExpansionModule } from "@angular/material/expansion";
 import { HttpClientModule } from '@angular/common/http';
 import { MatMenuModule } from '@angular/material/menu';
 import { PostsService } from './post/post.service';
+import { ReactiveFormsModule } from "@angular/forms";
 
 @NgModule({
 	declarations: [AppComponent, PostCreateComponent, HeaderComponent, PostListComponent],
@@ -36,7 +37,8 @@ import { PostsService } from './post/post.service';
 		MatProgressSpinnerModule,
     MatExpansionModule,
     HttpClientModule,
-    MatMenuModule
+    MatMenuModule,
+    ReactiveFormsModule
 	],
   providers: [PostsService],
 	bootstrap: [AppComponent],
