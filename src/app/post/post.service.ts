@@ -9,7 +9,7 @@ import { tap } from "rxjs/operators";
 export class PostsService {
   private apiUrl = "http://localhost:3000/api/posts";
   private posts: Post[] = [];
-  private postsUpdated = new Subject<Post[]>();
+  private postsUpdated = new Subject<{ posts: Post[], postCount: number }>();
 
   constructor(private http: HttpClient) { }
 
@@ -17,11 +17,16 @@ export class PostsService {
     return this.http.get<{ _id: string, title: string, content: string, imagePath: string }>(this.apiUrl + '/' + _id);
   }
 
-  getPosts() {
-    this.http.get<{ message: string; posts: Post[] }>(this.apiUrl).subscribe((postData) => {
-      this.posts = postData.posts;
-      this.postsUpdated.next([...this.posts]);
-    });
+  getPosts(postsPerPage: number, currentPage: number) {
+    const queryParams = `?pagesize=${postsPerPage}&page=${currentPage}`;
+    this.http.get<{ message: string; posts: Post[], maxPosts: number }>(this.apiUrl + queryParams)
+      .subscribe((responseData) => {
+        this.posts = responseData.posts;
+        this.postsUpdated.next({
+          posts: [...this.posts],
+          postCount: responseData.maxPosts
+        });
+      });
   }
 
   getPostsUpdatedListener() {
@@ -44,7 +49,10 @@ export class PostsService {
           imagePath: responseData.post.imagePath ? responseData.post.imagePath : ""
         };
         this.posts.push(post);
-        this.postsUpdated.next([...this.posts]);
+        this.postsUpdated.next({
+          posts: [...this.posts],
+          postCount: this.posts.length
+        });
       }));
   }
 
@@ -65,7 +73,10 @@ export class PostsService {
         const oldPostIndex = updatedPosts.findIndex(p => p._id === _id);
         updatedPosts[oldPostIndex] = { _id: _id, title: title, content: content, imagePath: "" };
         this.posts = updatedPosts;
-        this.postsUpdated.next([...this.posts]);
+        this.postsUpdated.next({
+          posts: [...this.posts],
+          postCount: this.posts.length
+        });
       }));
   }
 
@@ -74,7 +85,10 @@ export class PostsService {
       .subscribe(() => {
         console.log('Deleted: ' + postId);
         this.posts = this.posts.filter(post => post._id !== postId);
-        this.postsUpdated.next([...this.posts]);
+        this.postsUpdated.next({
+          posts: [...this.posts],
+          postCount: this.posts.length
+        });
       });
   }
 }

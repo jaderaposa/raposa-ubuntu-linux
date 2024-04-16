@@ -1,6 +1,5 @@
 import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
-
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { PostCreateComponent } from "./post/post-create/post-create.component";
@@ -20,6 +19,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { MatMenuModule } from '@angular/material/menu';
 import { PostsService } from './post/post.service';
 import { ReactiveFormsModule } from "@angular/forms";
+import { MatPaginatorModule } from '@angular/material/paginator';
+
 
 @NgModule({
 	declarations: [AppComponent, PostCreateComponent, HeaderComponent, PostListComponent],
@@ -38,7 +39,8 @@ import { ReactiveFormsModule } from "@angular/forms";
     MatExpansionModule,
     HttpClientModule,
     MatMenuModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatPaginatorModule,
 	],
   providers: [PostsService],
 	bootstrap: [AppComponent],

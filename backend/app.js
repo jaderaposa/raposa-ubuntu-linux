@@ -86,12 +86,27 @@ app.put("/api/posts/:id", (req, res, next) => {
 });
 
 app.get("/api/posts", (req, res, next) => {
-	Post.find().then((documents) => {
-		res.status(200).json({
-			message: "Posts fetched successfully!",
-			posts: documents,
+	const pageSize = +req.query.pagesize;
+	const currentPage = +req.query.page;
+	const postQuery = Post.find();
+	let fetchedPosts;
+
+	if (pageSize && currentPage) {
+		postQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
+	}
+
+	postQuery
+		.then((documents) => {
+			fetchedPosts = documents;
+			return Post.countDocuments();
+		})
+		.then((count) => {
+			res.status(200).json({
+				message: "Posts fetched successfully!",
+				posts: fetchedPosts,
+				maxPosts: count,
+			});
 		});
-	});
 });
 
 app.get("/api/posts/:id", (req, res, next) => {

@@ -5,8 +5,7 @@
 		<mat-expansion-panel-header> {{ post.title }} </mat-expansion-panel-header>
 		<img
 			class="post-image"
-			[src]="post.imagePath"
-			/>
+			[src]="post.imagePath" />
 		<p>{{ post.content }}</p>
 		<mat-action-row>
 			<button
@@ -30,4 +29,11 @@
 	No Post Added
 </p>
 
-<!-- (click)="deletePost(post.id)" -->
+<!-- Add the paginator here -->
+<mat-paginator
+	[length]="totalPosts"
+	[pageIndex]="currentPage - 1"
+	[pageSize]="postsPerPage"
+	[pageSizeOptions]="[1, 2, 5, 10]"
+	(page)="onChangedPage($event)">
+</mat-paginator>
