@@ -17,6 +17,8 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { PostListComponent } from "./post/post-list/post-list.component";
 import { MatExpansionModule } from "@angular/material/expansion";
 import { HttpClientModule } from '@angular/common/http';
+import { MatMenuModule } from '@angular/material/menu';
+import { PostsService } from './post/post.service';
 
 @NgModule({
 	declarations: [AppComponent, PostCreateComponent, HeaderComponent, PostListComponent],
@@ -33,9 +35,10 @@ import { HttpClientModule } from '@angular/common/http';
 		MatIconModule,
 		MatProgressSpinnerModule,
     MatExpansionModule,
-    HttpClientModule
+    HttpClientModule,
+    MatMenuModule
 	],
-	providers: [],
+  providers: [PostsService],
 	bootstrap: [AppComponent],
 })
 export class AppModule {}

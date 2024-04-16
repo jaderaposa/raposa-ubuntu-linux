@@ -14,29 +14,19 @@ export class PostListComponent implements OnInit, OnDestroy {
 
  constructor(public postsService: PostsService) { }
 
- ngOnInit() {
+  ngOnInit() {
     this.postsService.getPosts();
-    this.postsSub = this.postsService.getPostUpdateListener()
+    this.postsSub = this.postsService.getPostsUpdatedListener()
       .subscribe((posts: Post[]) => {
         this.posts = posts;
       });
- }
+  }
 
- ngOnDestroy(): void {
+  ngOnDestroy() {
     this.postsSub.unsubscribe();
- }
+  }
 
- // Add the deletePost method here
- deletePost(id: string): void {
-    this.postsService.deletePost(id).subscribe(
-      response => {
-        console.log(response);
-        // Optionally, remove the post from the local array
-        this.posts = this.posts.filter(post => post.id !== id);
-      },
-      error => {
-        console.error('Error deleting post', error);
-      }
-    );
- }
+  onDeletePost(postId: string) {
+    this.postsService.deletePost(postId);
+  }
 }

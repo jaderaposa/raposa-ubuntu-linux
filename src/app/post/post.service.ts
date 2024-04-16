@@ -20,7 +20,7 @@ export class PostsService {
     });
   }
 
-  getPostUpdateListener() {
+  getPostsUpdatedListener() {
     return this.postsUpdated.asObservable();
   }
 
@@ -35,13 +35,12 @@ export class PostsService {
     });
   }
 
-  deletePost(id: string): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${id}`).pipe(
-      tap(() => {
-        // After successfully deleting the post, update the local state
-        this.posts = this.posts.filter(post => post.id !== id);
+  deletePost(postId: string) {
+    this.http.delete('http://localhost:3000/api/posts/' + postId)
+      .subscribe(() => {
+        console.log('Deleted: ' + postId);
+        this.posts = this.posts.filter(post => post.id !== postId);
         this.postsUpdated.next([...this.posts]);
-      })
-    );
+      });
   }
 }
