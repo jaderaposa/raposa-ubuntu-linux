@@ -5,3 +5,10 @@
 .info-text {
   text-align: center;
 }
+
+.post-image {
+  max-width: 50%;
+  /* This makes sure the image is never wider than its container */
+  height: auto;
+  /* This maintains the aspect ratio of the image */
+}

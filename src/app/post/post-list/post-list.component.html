@@ -3,7 +3,10 @@
 	*ngIf="posts.length > 0">
 	<mat-expansion-panel *ngFor="let post of posts">
 		<mat-expansion-panel-header> {{ post.title }} </mat-expansion-panel-header>
-		<img [src]="post.imagePath" />
+		<img
+			class="post-image"
+			[src]="post.imagePath"
+			/>
 		<p>{{ post.content }}</p>
 		<mat-action-row>
 			<button
