@@ -20,10 +20,12 @@ import { MatMenuModule } from '@angular/material/menu';
 import { PostsService } from './post/post.service';
 import { ReactiveFormsModule } from "@angular/forms";
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { LoginComponent } from './login/login.component';
+import { RegisterComponent } from './register/register.component';
 
 
 @NgModule({
-	declarations: [AppComponent, PostCreateComponent, HeaderComponent, PostListComponent],
+	declarations: [AppComponent, PostCreateComponent, HeaderComponent, PostListComponent, LoginComponent, RegisterComponent],
 	imports: [
 		BrowserModule,
 		AppRoutingModule,

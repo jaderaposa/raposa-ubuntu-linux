@@ -6,8 +6,8 @@
         <mat-icon>menu</mat-icon>
       </button>
       <mat-menu #menu="matMenu">
-        <button mat-menu-item [routerLink]="['/create']">Create Post</button>
-        <button mat-menu-item [routerLink]="['/list']">List Posts</button>
+        <button mat-menu-item [routerLink]="['/create']" *ngIf="!isLoginOrRegister">Create Post</button>
+        <button mat-menu-item [routerLink]="['/list']" *ngIf="!isLoginOrRegister">List Posts</button>
       </mat-menu>
       <span>Kill Me Whenever</span>
     </div>
