@@ -3,7 +3,6 @@ import { BrowserModule } from "@angular/platform-browser";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { PostCreateComponent } from "./post/post-create/post-create.component";
-import { FormsModule } from "@angular/forms";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { MatInputModule } from "@angular/material/input";
 import { MatCardModule } from "@angular/material/card";
@@ -18,11 +17,12 @@ import { MatExpansionModule } from "@angular/material/expansion";
 import { HttpClientModule } from '@angular/common/http';
 import { MatMenuModule } from '@angular/material/menu';
 import { PostsService } from './post/post.service';
-import { ReactiveFormsModule } from "@angular/forms";
+import { ReactiveFormsModule, FormsModule } from "@angular/forms";
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
-
+import { JwtModule, JwtHelperService } from '@auth0/angular-jwt';
+import { AuthGuard } from "./guards/auth.guard";
 
 @NgModule({
 	declarations: [AppComponent, PostCreateComponent, HeaderComponent, PostListComponent, LoginComponent, RegisterComponent],
@@ -43,8 +43,17 @@ import { RegisterComponent } from './register/register.component';
     MatMenuModule,
     ReactiveFormsModule,
     MatPaginatorModule,
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: () => {
+          return localStorage.getItem('access_token');
+        },
+        allowedDomains: ['localhost:3000'],
+        disallowedRoutes: ['http://localhost:3000/api/auth/login']
+      }
+    })
 	],
-  providers: [PostsService],
+  providers: [PostsService, AuthGuard],
 	bootstrap: [AppComponent],
 })
 export class AppModule {}
