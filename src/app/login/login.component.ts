@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
   form!: FormGroup;
+  errorMessage = ''; // Add this line
 
   constructor(
     private formBuilder: FormBuilder,
@@ -30,7 +31,10 @@ export class LoginComponent implements OnInit {
       withCredentials: true
     }).subscribe((response: any) => {
       localStorage.setItem('access_token', response.accessToken);
+      localStorage.setItem('user', JSON.stringify(response.user)); // Store user information
       this.router.navigate(['/list']);
+    }, (error) => {
+      this.errorMessage = error.error.message;
     });
   }
 }
