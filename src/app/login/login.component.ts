@@ -39,7 +39,7 @@ export class LoginComponent implements OnInit {
         localStorage.removeItem('access_token');
         localStorage.removeItem('user');
         this.router.navigate(['/login']);
-      }, 5000); // Adjust this value to change the logout time
+      }, 300000); // Adjust this value to change the logout time
     }, (error) => {
       this.errorMessage = error.error.message;
     });

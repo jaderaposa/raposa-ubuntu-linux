@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import { UserService } from '../user.service'; // Adjust the path to match your project structure
 
 @Component({
   selector: 'app-header',
@@ -11,23 +12,37 @@ import { filter } from 'rxjs/operators';
 export class HeaderComponent implements OnInit, OnDestroy {
   username: string = '';
   routerSubscription: Subscription;
+  usernameSubscription: Subscription;
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private userService: UserService) {
     this.routerSubscription = new Subscription();
+    this.usernameSubscription = new Subscription(); // Initialize usernameSubscription
   }
-  
+
   ngOnInit(): void {
     this.routerSubscription = this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {
-      const user = JSON.parse(localStorage.getItem('user') ?? '');
-      this.username = user ? user.username : '';
+      const userItem = localStorage.getItem('user');
+      if (userItem) {
+        const user = JSON.parse(userItem);
+        this.username = user ? user.username : '';
+      } else {
+        this.username = '';
+      }
+    });
+
+    this.usernameSubscription = this.userService.username$.subscribe(username => {
+      this.username = username;
     });
   }
 
   ngOnDestroy() {
     if (this.routerSubscription) {
       this.routerSubscription.unsubscribe();
+    }
+    if (this.usernameSubscription) {
+      this.usernameSubscription.unsubscribe();
     }
   }
 
@@ -37,9 +52,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   logout(): void {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('user'); // Also remove the user from local storage
-    this.username = ''; // Clear the username
+    this.userService.logout();
     this.router.navigate(['/login']);
   }
 }

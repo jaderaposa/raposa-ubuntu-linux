@@ -68,7 +68,7 @@ app.post("/api/login", async (req, res) => {
 	}
 	try {
 		if (await bcrypt.compare(req.body.password, user.password)) {
-			const accessToken = jwt.sign(user.toJSON(), process.env.ACCESS_TOKEN_SECRET, { expiresIn: "5s" });
+			const accessToken = jwt.sign(user.toJSON(), process.env.ACCESS_TOKEN_SECRET, { expiresIn: "5m" });
 			res.json({ message: "Login successful", accessToken: accessToken, user: user });
 		} else {
 			res.status(403).json({ error: "Not Allowed" });
