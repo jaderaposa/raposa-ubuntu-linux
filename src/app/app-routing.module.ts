@@ -6,15 +6,15 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { AuthGuard } from './guards/auth.guard'; // Import your AuthGuard here
 import { LoginGuard } from './guards/login.guard';
-
+import { inject } from '@angular/core';
 
 const routes: Routes = [
-  { path: 'register', component: RegisterComponent, canActivate: [LoginGuard] },
-  { path: 'login', component: LoginComponent, canActivate: [LoginGuard] },
-  { path: 'create', component: PostCreateComponent, canActivate: [AuthGuard] },
-  { path: 'list', component: PostListComponent, canActivate: [AuthGuard] },
+  { path: 'register', component: RegisterComponent, canActivate: [() => inject(LoginGuard).canActivate()] },
+  { path: 'login', component: LoginComponent, canActivate: [() => inject(LoginGuard).canActivate()] },
+  { path: 'create', component: PostCreateComponent, canActivate: [() => inject(AuthGuard).canActivate()] },
+  { path: 'list', component: PostListComponent, canActivate: [() => inject(AuthGuard).canActivate()] },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
-  { path: 'create/:postId', component: PostCreateComponent, canActivate: [AuthGuard] },
+  { path: 'create/:postId', component: PostCreateComponent, canActivate: [() => inject(AuthGuard).canActivate()] },
 ];
 
 @NgModule({

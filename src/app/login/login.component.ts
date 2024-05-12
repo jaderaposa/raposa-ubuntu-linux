@@ -33,6 +33,13 @@ export class LoginComponent implements OnInit {
       localStorage.setItem('access_token', response.accessToken);
       localStorage.setItem('user', JSON.stringify(response.user)); // Store user information
       this.router.navigate(['/list']);
+
+      // Set a timeout to automatically log out the user after 5 seconds
+      setTimeout(() => {
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('user');
+        this.router.navigate(['/login']);
+      }, 5000); // Adjust this value to change the logout time
     }, (error) => {
       this.errorMessage = error.error.message;
     });
