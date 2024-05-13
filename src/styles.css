@@ -1,7 +1,23 @@
-/* You can add global styles to this file, and also import other style files */
 @import '~bootstrap/dist/css/bootstrap.css';
 
+html,
+body {
+  height: 100%;
+}
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+body {
+  background-image: url(https://i.pinimg.com/originals/9b/fd/68/9bfd687d937f8f625620d0e1349716df.gif);
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+}
+
+main {
+  margin: 1rem;
+}
 
