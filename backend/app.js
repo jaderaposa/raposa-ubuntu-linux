@@ -82,14 +82,18 @@ app.post("/api/login", async (req, res) => {
 app.post("/api/register", async (req, res) => {
 	try {
 		// Validate the input
+		let errors = [];
 		if (!req.body.username || req.body.username.length < 3) {
-			return res.status(400).send({ error: "Username must be at least 3 characters." });
+			errors.push("Username must be at least 3 characters.");
 		}
 		if (!req.body.email || !req.body.email.includes("@")) {
-			return res.status(400).send({ error: "Invalid email." });
+			errors.push("Invalid email.");
 		}
 		if (!req.body.password || req.body.password.length < 6) {
-			return res.status(400).send({ error: "Password must be at least 6 characters." });
+			errors.push("Password must be at least 6 characters.");
+		}
+		if (errors.length > 0) {
+			return res.status(400).send({ errors: errors });
 		}
 
 		const user = new User({

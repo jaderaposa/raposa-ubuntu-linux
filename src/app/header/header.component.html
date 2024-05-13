@@ -12,11 +12,12 @@
       </ng-container>
       <h1>Please Kill Me {{username}}</h1>
     </div>
-    <div>
+    <div style="display: flex;">
       <!-- put the log out button here -->
       <button mat-button (click)="logout()" style="color: white;" *ngIf="isLoggedIn()">Log Out</button>
       <!-- display a log in button here for redirection and register if the user is not logged in -->
       <button mat-button [routerLink]="['/login']" *ngIf="!isLoggedIn()">Log In</button>
+      <p>|</p>
       <button mat-button [routerLink]="['/register']" *ngIf="!isLoggedIn()">Register</button>
     </div>
   </mat-toolbar>

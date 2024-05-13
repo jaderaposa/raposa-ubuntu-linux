@@ -20,9 +20,11 @@
             required>
         </div>
 
-        <div *ngIf="errorMessage" class="alert alert-danger mt-3">
-          {{ errorMessage }}
-        </div>
+        <ng-container *ngIf="errorMessage">
+          <div *ngFor="let error of errorMessage.split(', ')" class="alert alert-danger mt-3">
+            {{ error }}
+          </div>
+        </ng-container>
 
         <button class="w-100 btn btn-lg btn-primary" type="submit">Submit</button>
       </form>
