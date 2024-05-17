@@ -23,6 +23,7 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { JwtModule, JwtHelperService } from '@auth0/angular-jwt';
 import { AuthGuard } from "./guards/auth.guard";
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
 	declarations: [AppComponent, PostCreateComponent, HeaderComponent, PostListComponent, LoginComponent, RegisterComponent],
@@ -51,7 +52,8 @@ import { AuthGuard } from "./guards/auth.guard";
         allowedDomains: ['localhost:3000'],
         disallowedRoutes: ['http://localhost:3000/api/auth/login']
       }
-    })
+    }),
+    MatDialogModule,
 	],
   providers: [PostsService, AuthGuard],
 	bootstrap: [AppComponent],

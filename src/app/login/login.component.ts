@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { UserService } from '../user.service';
 
 @Component({
   selector: 'app-login',
@@ -10,12 +11,15 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
   form!: FormGroup;
-  errorMessage = ''; // Add this line
+  errorMessage = '';
+  isTokenExpired = false;
+
 
   constructor(
     private formBuilder: FormBuilder,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private userService: UserService
   ) {
   }
 
@@ -34,14 +38,12 @@ export class LoginComponent implements OnInit {
       localStorage.setItem('user', JSON.stringify(response.user)); // Store user information
       this.router.navigate(['/list']);
 
-      // Set a timeout to automatically log out the user after 5 seconds
+      // Set a timeout to show the modal after 5 seconds
       setTimeout(() => {
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('user');
-        this.router.navigate(['/login']);
+        this.userService.setTokenExpired(true);
       }, 300000); // Adjust this value to change the logout time
     }, (error) => {
-      this.errorMessage = error.error.message;
+      this.errorMessage = error.error.error;
     });
   }
 }

@@ -17,7 +17,14 @@
   No Post Added
 </p>
 
-<!-- Add the paginator here -->
 <mat-paginator class="mat-paginator" [length]="totalPosts" [pageIndex]="currentPage - 1" [pageSize]="postsPerPage"
   [pageSizeOptions]="[1, 2, 5, 10]" (page)="onChangedPage($event)">
 </mat-paginator>
+
+<div class="modal" *ngIf="isTokenExpired">
+  <mat-card>
+    <h2>Error</h2>
+    <p>Your login has expired. Please log in again.</p>
+    <button mat-button (click)="onOkClick()">OK</button>
+  </mat-card>
+</div>

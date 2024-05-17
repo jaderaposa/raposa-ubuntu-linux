@@ -6,6 +6,8 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class UserService {
   private userSubject = new BehaviorSubject<string>('');
+  private tokenExpiredSubject = new BehaviorSubject<boolean>(false);
+
 
   constructor() {
     const userItem = localStorage.getItem('user');
@@ -15,6 +17,14 @@ export class UserService {
 
   get username$() {
     return this.userSubject.asObservable();
+  }
+
+  get tokenExpired$() {
+    return this.tokenExpiredSubject.asObservable();
+  }
+
+  setTokenExpired(value: boolean) {
+    this.tokenExpiredSubject.next(value);
   }
 
   login(user: any) {

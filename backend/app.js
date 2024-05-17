@@ -60,22 +60,22 @@ app.use("/images", express.static(path.join("images"))); // Add this line
 
 // Login route
 app.post("/api/login", async (req, res) => {
-	const user = await User.findOne({
-		$or: [{ username: req.body.usernameOrEmail }, { email: req.body.usernameOrEmail }],
-	});
-	if (user == null) {
-		return res.status(400).json({ error: "Cannot find user" });
-	}
-	try {
-		if (await bcrypt.compare(req.body.password, user.password)) {
-			const accessToken = jwt.sign(user.toJSON(), process.env.ACCESS_TOKEN_SECRET, { expiresIn: "5m" });
-			res.json({ message: "Login successful", accessToken: accessToken, user: user });
-		} else {
-			res.status(403).json({ error: "Not Allowed" });
-		}
-	} catch (err) {
-		res.status(500).json({ error: err.message });
-	}
+    const user = await User.findOne({
+        $or: [{ username: req.body.usernameOrEmail }, { email: req.body.usernameOrEmail }],
+    });
+    if (user == null) {
+        return res.status(400).json({ error: "Username/Email does not exist" });
+    }
+    try {
+        if (await bcrypt.compare(req.body.password, user.password)) {
+            const accessToken = jwt.sign(user.toJSON(), process.env.ACCESS_TOKEN_SECRET, { expiresIn: "5m" });
+            res.json({ message: "Login successful", accessToken: accessToken, user: user });
+        } else {
+            res.status(403).json({ error: "Wrong password" });
+        }
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
 // Register route
