@@ -58,24 +58,52 @@ app.use(multer({ storage: storage }).single("image"));
 
 app.use("/images", express.static(path.join("images"))); // Add this line
 
+let failedAttempts = {};
+const MAX_ATTEMPTS = 3;
+const BLOCK_TIME = 30 * 1000; // 30 seconds
+
 // Login route
 app.post("/api/login", async (req, res) => {
-    const user = await User.findOne({
-        $or: [{ username: req.body.usernameOrEmail }, { email: req.body.usernameOrEmail }],
-    });
-    if (user == null) {
-        return res.status(400).json({ error: "Username/Email does not exist" });
-    }
-    try {
-        if (await bcrypt.compare(req.body.password, user.password)) {
-            const accessToken = jwt.sign(user.toJSON(), process.env.ACCESS_TOKEN_SECRET, { expiresIn: "5m" });
-            res.json({ message: "Login successful", accessToken: accessToken, user: user });
-        } else {
-            res.status(403).json({ error: "Wrong password" });
-        }
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+	const { usernameOrEmail } = req.body;
+	const currentTime = Date.now();
+
+	if (failedAttempts[usernameOrEmail] && failedAttempts[usernameOrEmail].blockUntil > currentTime) {
+		const remainingTime = Math.ceil((failedAttempts[usernameOrEmail].blockUntil - currentTime) / 1000);
+		return res.status(429).json({ error: `Too many failed attempts. Try again in ${remainingTime} seconds.` });
+	} else if (failedAttempts[usernameOrEmail] && failedAttempts[usernameOrEmail].blockUntil <= currentTime) {
+		// If block time has passed, reset the failed attempts count
+		failedAttempts[usernameOrEmail] = { count: 0 };
+	}
+
+	const user = await User.findOne({
+		$or: [{ username: usernameOrEmail }, { email: usernameOrEmail }],
+	});
+
+	if (user == null) {
+		return res.status(400).json({ error: "Username/Email does not exist" });
+	}
+
+	try {
+		if (await bcrypt.compare(req.body.password, user.password)) {
+			// Successful login
+			failedAttempts[usernameOrEmail] = { count: 0 }; // reset the counter
+			const accessToken = jwt.sign(user.toJSON(), process.env.ACCESS_TOKEN_SECRET, { expiresIn: "5m" });
+			res.json({ message: "Login successful", accessToken: accessToken, user: user });
+		} else {
+			failedAttempts[usernameOrEmail] = failedAttempts[usernameOrEmail] || { count: 0 };
+			failedAttempts[usernameOrEmail].count++;
+
+			if (failedAttempts[usernameOrEmail].count >= MAX_ATTEMPTS) {
+				failedAttempts[usernameOrEmail].blockUntil = currentTime + BLOCK_TIME;
+				const remainingTime = BLOCK_TIME / 1000;
+				return res.status(429).json({ error: `Too many failed attempts. Try again in ${remainingTime} seconds.` });
+			}
+
+			res.status(403).json({ error: "Wrong password" });
+		}
+	} catch (err) {
+		res.status(500).json({ error: err.message });
+	}
 });
 
 // Register route
