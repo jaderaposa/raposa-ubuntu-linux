@@ -1,3 +1,8 @@
+h1 {
+  font-size: 2rem;
+  padding-bottom: 3rem;
+}
+
 .input-group {
   position: relative;
   border-top-right-radius: 5px;
@@ -14,6 +19,7 @@
   /* Adjust as needed */
   top: 50%;
   transform: translateY(-50%);
+  z-index: 99;
 }
 
 .transparent-card {
@@ -70,4 +76,6 @@ button.transparent-button:focus {
   /* Adjust as needed */
   border-bottom-right-radius: 5px;
   /* Adjust as needed */
+  padding-right: 40px;
+  background-color: white;
 }
