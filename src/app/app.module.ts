@@ -24,6 +24,7 @@ import { RegisterComponent } from './register/register.component';
 import { JwtModule, JwtHelperService } from '@auth0/angular-jwt';
 import { AuthGuard } from "./guards/auth.guard";
 import { MatDialogModule } from '@angular/material/dialog';
+import { DatePipe } from '@angular/common';
 
 @NgModule({
 	declarations: [AppComponent, PostCreateComponent, HeaderComponent, PostListComponent, LoginComponent, RegisterComponent],
@@ -55,7 +56,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     }),
     MatDialogModule,
 	],
-  providers: [PostsService, AuthGuard],
+  providers: [PostsService, AuthGuard, DatePipe],
 	bootstrap: [AppComponent],
 })
 export class AppModule {}
