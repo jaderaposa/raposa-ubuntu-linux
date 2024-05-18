@@ -109,7 +109,6 @@ app.post("/api/login", async (req, res) => {
 // Register route
 app.post("/api/register", async (req, res) => {
 	try {
-		// Validate the input
 		let errors = [];
 		if (!req.body.username || req.body.username.length < 3) {
 			errors.push("Username must be at least 3 characters.");
@@ -120,6 +119,9 @@ app.post("/api/register", async (req, res) => {
 		if (!req.body.password || req.body.password.length < 6) {
 			errors.push("Password must be at least 6 characters.");
 		}
+		if (req.body.password !== req.body.confirmPassword) {
+			errors.push("Passwords do not match.");
+		}
 		if (errors.length > 0) {
 			return res.status(400).send({ errors: errors });
 		}
@@ -127,7 +129,7 @@ app.post("/api/register", async (req, res) => {
 		const user = new User({
 			username: req.body.username,
 			email: req.body.email,
-			password: req.body.password, // No need to hash here
+			password: req.body.password,
 		});
 		const savedUser = await user.save();
 		res.send(savedUser);

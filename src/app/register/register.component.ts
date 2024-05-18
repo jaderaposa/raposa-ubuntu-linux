@@ -23,18 +23,27 @@ export class RegisterComponent implements OnInit {
     this.form = this.formBuilder.group({
       username: '',
       email: '',
-      password: ''
+      password: '',
+      confirmPassword: '' // Add this line
     });
   }
 
   submit(): void {
+    const passwordControl = this.form.get('password');
+    const confirmPasswordControl = this.form.get('confirmPassword');
+
+    if (passwordControl && confirmPasswordControl && passwordControl.value !== confirmPasswordControl.value) {
+      this.errorMessage = 'Passwords do not match';
+      return;
+    }
+
     this.http.post('http://localhost:3000/api/register', this.form.getRawValue())
       .subscribe({
         next: () => {
           this.router.navigate(['/login']);
         },
         error: (err) => {
-          this.errorMessage = err.error.errors.join(', '); // Update this line
+          this.errorMessage = err.error.errors.join(', ');
         }
       });
   }
