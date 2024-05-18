@@ -16,6 +16,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class LoginComponent implements OnInit, OnDestroy {
   form!: FormGroup;
   errorMessage = '';
+  hidePassword = true;
   countdown: number | null = null;
   private countdownTimer$ = timer(0, 1000);
   private destroy$ = new Subject<void>();

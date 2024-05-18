@@ -12,6 +12,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class RegisterComponent implements OnInit {
   form!: FormGroup;
   errorMessage = ''; // Add this line
+  hidePassword = true;
+  hideConfirmPassword = true;
 
   constructor(
     private formBuilder: FormBuilder,
