@@ -55,12 +55,13 @@ export class LoginComponent implements OnInit, OnDestroy {
         localStorage.setItem('access_token', response.accessToken);
         localStorage.setItem('user', JSON.stringify(response.user)); // Store user information
         this.router.navigate(['/list']);
-
+        this.snackBar.open('Account Logged In!', 'Close', {
+          duration: 5000,
+        });
         // Set a timeout to show the modal after 5 seconds
         setTimeout(() => {
           this.userService.setTokenExpired(true);
         }, 300000); // Adjust this value to change the logout time
-
         this.errorMessage = ''; // Clear error message on successful login
       },
       error: (error) => {

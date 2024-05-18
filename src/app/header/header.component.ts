@@ -3,6 +3,7 @@ import { Router, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { UserService } from '../user.service'; // Adjust the path to match your project structure
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-header',
@@ -14,7 +15,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   routerSubscription: Subscription;
   usernameSubscription: Subscription;
 
-  constructor(private router: Router, private userService: UserService) {
+  constructor(private router: Router, private userService: UserService, private snackBar: MatSnackBar) {
     this.routerSubscription = new Subscription();
     this.usernameSubscription = new Subscription(); // Initialize usernameSubscription
   }
@@ -54,5 +55,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   logout(): void {
     this.userService.logout();
     this.router.navigate(['/login']);
+    this.snackBar.open('Account Logged Out :(', 'Close', {
+      duration: 5000,
+    });
   }
 }
