@@ -25,6 +25,7 @@ import { JwtModule, JwtHelperService } from '@auth0/angular-jwt';
 import { AuthGuard } from "./guards/auth.guard";
 import { MatDialogModule } from '@angular/material/dialog';
 import { DatePipe } from '@angular/common';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
 	declarations: [AppComponent, PostCreateComponent, HeaderComponent, PostListComponent, LoginComponent, RegisterComponent],
@@ -55,6 +56,7 @@ import { DatePipe } from '@angular/common';
       }
     }),
     MatDialogModule,
+    MatSnackBarModule,
 	],
   providers: [PostsService, AuthGuard, DatePipe],
 	bootstrap: [AppComponent],

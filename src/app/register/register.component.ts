@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-register',
@@ -15,7 +16,8 @@ export class RegisterComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private snackBar: MatSnackBar  // Inject MatSnackBar
   ) {
   }
 
@@ -34,6 +36,9 @@ export class RegisterComponent implements OnInit {
 
     if (passwordControl && confirmPasswordControl && passwordControl.value !== confirmPasswordControl.value) {
       this.errorMessage = 'Passwords do not match';
+      this.snackBar.open(this.errorMessage, 'Close', {
+        duration: 5000,
+      });
       return;
     }
 
@@ -44,6 +49,9 @@ export class RegisterComponent implements OnInit {
         },
         error: (err) => {
           this.errorMessage = err.error.errors.join(', ');
+          this.snackBar.open(this.errorMessage, 'Close', {
+            duration: 5000,
+          });
         }
       });
   }

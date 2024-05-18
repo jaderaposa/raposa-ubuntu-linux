@@ -3,23 +3,20 @@
     <div class="card-body">
       <form [formGroup]="form" (submit)="submit()">
         <h1 class="h3 mb-3 fw-normal text-center">Log In</h1>
-
         <div class="form-group mb-3">
           <label for="usernameOrEmail">Username or Email</label>
           <input formControlName="usernameOrEmail" type="text" class="form-control" id="usernameOrEmail"
             placeholder="Username or Email" required>
         </div>
-
         <div class="form-group mb-3">
           <label for="password">Password</label>
           <input formControlName="password" type="password" class="form-control" id="password" placeholder="Password"
             required>
         </div>
-
-        <div *ngIf="errorMessage" class="error-message alert alert-danger mt-3">
+        <!-- <div *ngIf="errorMessage" class="error-message alert alert-danger mt-3"
+          style="max-width: 500px; overflow-wrap: break-word;">
           {{ errorMessage }}
-        </div>
-
+        </div> -->
         <button class="w-100 btn btn-lg btn-primary" type="submit" [disabled]="countdown !== null">Sign in</button>
       </form>
     </div>

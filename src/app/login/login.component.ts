@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { UserService } from '../user.service';
 import { timer, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
 
 @Component({
   selector: 'app-login',
@@ -23,7 +25,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private http: HttpClient,
     private router: Router,
-    private userService: UserService
+    private userService: UserService,
+    private snackBar: MatSnackBar
   ) {
   }
 
@@ -64,6 +67,9 @@ export class LoginComponent implements OnInit, OnDestroy {
           this.startCountdown(30);
         } else {
           this.errorMessage = error.error.error;
+          this.snackBar.open(this.errorMessage, 'Close', {
+            duration: 5000,
+          });
         }
       }
     });
@@ -75,6 +81,9 @@ export class LoginComponent implements OnInit, OnDestroy {
       if (this.countdown !== null && this.countdown > 0) {
         this.countdown--;
         this.errorMessage = `Too many failed attempts. Try again in ${this.countdown} seconds.`;
+        this.snackBar.open(this.errorMessage, 'Close', {
+          duration: 1000,
+        });
       } else {
         clearInterval(intervalId);
         this.countdown = null;
