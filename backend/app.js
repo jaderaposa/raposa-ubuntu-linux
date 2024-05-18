@@ -139,13 +139,6 @@ app.post("/api/register", async (req, res) => {
 	}
 });
 
-app.use((req, res, next) => {
-	res.setHeader("Access-Control-Allow-Origin", "*");
-	res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-	res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS");
-	next();
-});
-
 app.post("/api/posts", authenticateToken, (req, res, next) => {
 	const url = req.protocol + "://" + req.get("host");
 	let imagePath = null;
@@ -156,6 +149,7 @@ app.post("/api/posts", authenticateToken, (req, res, next) => {
 		title: req.body.title,
 		content: req.body.content,
 		imagePath: imagePath, // use imagePath variable here
+		author: req.user.username, // set the author to the currently authenticated user's username
 	});
 	post.save().then((createdPost) => {
 		res.status(201).json({
@@ -165,6 +159,7 @@ app.post("/api/posts", authenticateToken, (req, res, next) => {
 				title: createdPost.title,
 				content: createdPost.content,
 				imagePath: createdPost.imagePath,
+				author: createdPost.author, // include the author in the response
 			},
 		});
 	});

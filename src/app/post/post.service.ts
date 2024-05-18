@@ -1,20 +1,26 @@
 import { Injectable } from "@angular/core";
-import { Subject } from "rxjs";
+import { Subject, Subscription } from "rxjs"; // Import Subscription from rxjs
 import { HttpClient } from "@angular/common/http";
 import { Post } from "./post.model";
 import { Observable } from "rxjs";
 import { tap } from "rxjs/operators";
+import { UserService } from "../user.service";
 
 @Injectable({ providedIn: "root" })
 export class PostsService {
   private apiUrl = "http://localhost:3000/api/posts";
   private posts: Post[] = [];
   private postsUpdated = new Subject<{ posts: Post[], postCount: number }>();
+  private username: string = ''; // Initialize username
+  private authStatusSub: Subscription;
 
-  constructor(private http: HttpClient) { }
-
+  constructor(private http: HttpClient, private userService: UserService) { // Remove unused Router
+    this.authStatusSub = this.userService.username$.subscribe(username => {
+      this.username = username;
+    });
+  }
   getPost(_id: string) {
-    return this.http.get<{ _id: string, title: string, content: string, imagePath: string }>(this.apiUrl + '/' + _id);
+    return this.http.get<{ _id: string, title: string, content: string, imagePath: string, author: string, timePosted: Date }>(this.apiUrl + '/' + _id);
   }
 
   getPosts(postsPerPage: number, currentPage: number) {
@@ -37,6 +43,8 @@ export class PostsService {
     const postData = new FormData();
     postData.append('title', title);
     postData.append('content', content);
+    postData.append('author', this.username);
+    postData.append('timePosted', new Date().toISOString());
     if (image) { // Check if image is defined
       postData.append('image', image, title);
     }
@@ -46,7 +54,9 @@ export class PostsService {
           _id: responseData.post._id,
           title: title,
           content: content,
-          imagePath: responseData.post.imagePath ? responseData.post.imagePath : ""
+          imagePath: responseData.post.imagePath ? responseData.post.imagePath : "",
+          author: this.username, // Add this line
+          timePosted: new Date() // Add this line
         };
         this.posts.push(post);
         this.postsUpdated.next({
@@ -64,14 +74,31 @@ export class PostsService {
       postData.append('title', title);
       postData.append('content', content);
       postData.append('image', image, title);
+      postData.append('author', this.username);
+      postData.append('timePosted', new Date().toISOString());
     } else {
-      postData = { _id: _id, title: title, content: content, imagePath: typeof image === 'string' ? image : "" };
+      postData = {
+        _id: _id,
+        title: title,
+        content: content,
+        imagePath: typeof image === 'string' ? image : "",
+        author: this.username, // Add this line
+        timePosted: new Date() // Add this line
+      };
     }
     return this.http.put(this.apiUrl + '/' + _id, postData)
       .pipe(tap(() => {
         const updatedPosts = [...this.posts];
         const oldPostIndex = updatedPosts.findIndex(p => p._id === _id);
-        updatedPosts[oldPostIndex] = { _id: _id, title: title, content: content, imagePath: "" };
+        const updatedPost = {
+          _id: _id,
+          title: title,
+          content: content,
+          imagePath: typeof image === 'string' ? image : "",
+          author: this.username, // Add this line
+          timePosted: new Date() // Add this line
+        };
+        updatedPosts[oldPostIndex] = updatedPost;
         this.posts = updatedPosts;
         this.postsUpdated.next({
           posts: [...this.posts],
@@ -90,5 +117,9 @@ export class PostsService {
           postCount: this.posts.length
         });
       });
+  }
+
+  ngOnDestroy() {
+    this.authStatusSub.unsubscribe();
   }
 }

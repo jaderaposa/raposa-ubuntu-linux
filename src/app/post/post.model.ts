@@ -1,6 +1,8 @@
 export interface Post {
-  _id: string; // Change this line
+  _id: string;
   title: string;
   content: string;
-  imagePath: string; // Add this line
+  imagePath: string;
+  author: string; // Add this line
+  timePosted: Date; // Add this line
 }

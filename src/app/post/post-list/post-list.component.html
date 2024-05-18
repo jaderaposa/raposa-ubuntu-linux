@@ -3,6 +3,8 @@
     <mat-expansion-panel-header> {{ post.title }} </mat-expansion-panel-header>
     <img class="post-image" [src]="post.imagePath" />
     <p>{{ post.content }}</p>
+    <p>Author: {{ post.author }}</p> <!-- Add this line -->
+    <p>Posted on: {{ post.timePosted | date }}</p> <!-- Add this line -->
     <mat-action-row>
       <button mat-button color="primary" (click)="onEditPost(post._id)">
         Edit
