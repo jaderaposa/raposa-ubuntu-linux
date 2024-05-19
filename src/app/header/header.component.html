@@ -10,9 +10,9 @@
           <button mat-menu-item [routerLink]="['/list']">Post List</button>
         </mat-menu>
       </ng-container>
-      <h1>Please Kill Me {{username}}</h1>
+      <h1>Please Kill Me <span>{{username}}</span></h1>
     </div>
-    <div style="display: flex;">
+    <div class="custom" style="display: flex;">
       <!-- put the log out button here -->
       <button mat-button (click)="logout()" style="color: white;" *ngIf="isLoggedIn()">Log Out</button>
       <!-- display a log in button here for redirection and register if the user is not logged in -->

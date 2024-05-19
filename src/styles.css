@@ -7,7 +7,6 @@ body {
 
 body {
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
 body {
@@ -19,5 +18,10 @@ body {
 
 main {
   margin: 1rem;
+}
+
+h1 {
+  font-family: 'HelpMe' !important;
+  font-size: 2rem;
 }
 

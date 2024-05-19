@@ -3,3 +3,16 @@ mat-toolbar {
   background-color: transparent;
   justify-content: space-between;
 }
+
+h1  {
+  font-family: 'HelpMe' !important;
+  font-size: 2rem;
+}
+
+.custom, button {
+  font-family: 'HelpMe';
+}
+
+span {
+  font-family: 'Horror';
+}
