@@ -23,5 +23,6 @@ main {
 h1 {
   font-family: 'HelpMe' !important;
   font-size: 2rem;
+  color: red;
 }
 
