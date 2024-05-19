@@ -4,12 +4,12 @@
       <form [formGroup]="form" (submit)="submit()">
         <h1 class="h3 mb-3 fw-normal text-center">SIGN IN</h1>
         <div class="form-group mb-3">
-          <label for="usernameOrEmail">Username/Email</label>
+          <label for="usernameOrEmail">PARTICIPANT</label>
           <input formControlName="usernameOrEmail" type="text" class="form-control" id="usernameOrEmail"
             placeholder="Username or Email" required>
         </div>
         <div class="form-group mb-3">
-          <label for="password">Password</label>
+          <label for="password">SECRET KEY</label>
           <div class="input-group">
             <input [type]="hidePassword ? 'password' : 'text'" formControlName="password" id="password" class="form-control right-radius"
               placeholder="Password" required>
@@ -22,7 +22,7 @@
           style="max-width: 500px; overflow-wrap: break-word;">
           {{ errorMessage }}
         </div> -->
-        <button class="w-100 btn btn-lg btn-primary transparent-button" type="submit" [disabled]="countdown !== null">let's get it >:)</button>
+        <button class="w-100 btn btn-lg btn-primary transparent-button" type="submit" [disabled]="countdown !== null">ENTER</button>
       </form>
     </div>
   </div>

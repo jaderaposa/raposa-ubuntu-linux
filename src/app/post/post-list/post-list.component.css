@@ -1,7 +1,9 @@
-:host {
+/* :host {
   display: block;
   margin-top: 1rem;
 }
+
+*/
 .info-text {
   text-align: center;
 }
@@ -29,3 +31,18 @@
   padding: 20px;
 }
 
+.content {
+  width: 80%;
+  /* Adjust this value to your liking */
+  margin: 0 auto;
+  /* This centers the accordion */
+}
+
+.custom-paginator {
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+::ng-deep .mat-mdc-paginator-navigation-next .mat-mdc-paginator-icon, ::ng-deep .mat-mdc-paginator-navigation-previous .mat-mdc-paginator-icon {
+  /* fill: red !important; */
+}
