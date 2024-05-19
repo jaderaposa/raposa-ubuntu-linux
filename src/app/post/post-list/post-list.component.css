@@ -43,6 +43,6 @@
   border-bottom-left-radius: 5px;
 }
 
-::ng-deep .mat-mdc-paginator-navigation-next .mat-mdc-paginator-icon, ::ng-deep .mat-mdc-paginator-navigation-previous .mat-mdc-paginator-icon {
-  /* fill: red !important; */
-}
+/* ::ng-deep .mat-mdc-paginator-navigation-next .mat-mdc-paginator-icon, ::ng-deep .mat-mdc-paginator-navigation-previous .mat-mdc-paginator-icon {
+  fill: red !important;
+} */
