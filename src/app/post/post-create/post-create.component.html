@@ -1,0 +1,19 @@
+<mat-card>
+  <form [formGroup]="form" (submit)="onAddPost()">
+    <mat-form-field>
+      <mat-label>Title</mat-label>
+      <input matInput type="text" formControlName="title" required />
+      <mat-error *ngIf="form?.get('title')?.invalid">Please Enter A Post Title</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Content</mat-label>
+      <textarea matInput rows="4" formControlName="content" required></textarea>
+      <mat-error *ngIf="form?.get('content')?.invalid">Please Enter A Post Content</mat-error>
+    </mat-form-field>
+    <div class="d-flex justify-content-between align-items-center">
+      <button mat-raised-button color="warn" type="submit" *ngIf="!postId">Add Post</button>
+      <button mat-raised-button color="warn" type="submit" *ngIf="postId">Save Post</button>
+      <input type="file" (change)="onImagePicked($event)">
+    </div>
+  </form>
+</mat-card>

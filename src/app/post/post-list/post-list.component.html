@@ -1,0 +1,34 @@
+<div class="content">
+  <mat-accordion class="narrow-accordion" multi="true" *ngIf="posts.length > 0">
+    <mat-expansion-panel *ngFor="let post of posts">
+      <mat-expansion-panel-header> {{ post.title }} </mat-expansion-panel-header>
+      <img class="post-image" [src]="post.imagePath" />
+      <p>{{ post.content }}</p>
+      <p>Author: {{ post.author }}</p> <!-- Add this line -->
+      <p>Posted on: {{ post.timePosted | date:'MMMM d, y, h:mm a' }}</p> <mat-action-row>
+        <button mat-button color="primary" (click)="onEditPost(post._id)">
+          Edit
+        </button>
+        <button mat-button color="warn" (click)="onDeletePost(post._id)">
+          Delete
+        </button>
+      </mat-action-row>
+    </mat-expansion-panel>
+  </mat-accordion>
+  <p class="info-text mat-body-1" *ngIf="posts.length <= 0">
+    No Post Added
+  </p>
+
+  <mat-paginator class="custom-paginator" [length]="totalPosts" [pageIndex]="currentPage - 1" [pageSize]="postsPerPage"
+    [pageSizeOptions]="[1, 2, 5, 10]" (page)="onChangedPage($event)">
+  </mat-paginator>
+
+</div>
+
+<div class="modal" *ngIf="isTokenExpired">
+  <mat-card>
+    <h2>Error</h2>
+    <p>Your login has expired. Please log in again.</p>
+    <button mat-button (click)="onOkClick()">OK</button>
+  </mat-card>
+</div>

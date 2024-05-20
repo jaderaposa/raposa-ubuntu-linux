@@ -1,0 +1,30 @@
+@import '~bootstrap/dist/css/bootstrap.css';
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+}
+
+body {
+  background-image: url(https://i.pinimg.com/originals/9b/fd/68/9bfd687d937f8f625620d0e1349716df.gif);
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+}
+
+main {
+  width: 80%;
+  /* Adjust this value to your liking */
+  margin: 0 auto;
+  /* This centers the accordion */
+}
+
+h1 {
+  font-family: 'HelpMe' !important;
+  font-size: 2rem;
+  color: red;
+}

@@ -1,0 +1,27 @@
+
+@font-face {
+  font-family: 'HelpMe';
+  src: url('./fonts/HelpMe.ttf') format('truetype');
+  font-weight: normal;
+  /* The weight of the font */
+  font-style: normal;
+  /* The style of the font */
+}
+
+@font-face {
+  font-family: 'DieDie';
+  src: url('./fonts/DIEDIEDI.TTF') format('truetype');
+  font-weight: normal;
+  /* The weight of the font */
+  font-style: normal;
+  /* The style of the font */
+}
+
+@font-face {
+  font-family: 'Horror';
+  src: url('./fonts/Horror.ttf') format('truetype');
+  font-weight: bold;
+  /* The weight of the font */
+  font-style: normal;
+  /* The style of the font */
+}

@@ -1,0 +1,22 @@
+mat-toolbar {
+  color: white;
+  background-color: transparent;
+  justify-content: space-between;
+}
+
+h1  {
+  font-family: 'HelpMe' !important;
+  font-size: 2rem;
+  color: white;
+}
+
+.red-button {
+  font-family: 'HelpMe';
+  }
+  .red-button:hover {
+    color: red;
+  }
+
+span {
+  color: red;
+}

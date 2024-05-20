@@ -1,0 +1,51 @@
+<div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+  <div class="card transparent-card" style="max-width: 500px;">
+    <div class="card-body">
+      <form [formGroup]="form" (submit)="submit()">
+        <h1 class="h3 mb-3 fw-normal text-center">SIGN UP</h1>
+
+        <div class="form-group mb-3">
+          <label for="username">Username</label>
+          <input formControlName="username" id="username" class="form-control" placeholder="Username" required>
+        </div>
+
+        <div class="form-group mb-3">
+          <label for="email">Email</label>
+          <input formControlName="email" id="email" type="email" class="form-control" placeholder="Email" required>
+        </div>
+
+        <div class="form-group mb-3">
+          <label for="password">Password</label>
+          <div class="input-group">
+            <input [type]="hidePassword ? 'password' : 'text'" formControlName="password" id="password"
+              class="form-control right-radius" placeholder="Password" required>
+            <button mat-icon-button type="button" (click)="hidePassword = !hidePassword"
+              class="toggle-password eye-icon">
+              <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group mb-3">
+          <label for="confirmPassword">Confirm Password</label>
+          <div class="input-group">
+            <input [type]="hideConfirmPassword ? 'password' : 'text'" formControlName="confirmPassword"
+              id="confirmPassword" class="form-control right-radius" placeholder="Confirm Password" required>
+            <button mat-icon-button type="button" (click)="hideConfirmPassword = !hideConfirmPassword"
+              class="toggle-password eye-icon">
+              <mat-icon>{{hideConfirmPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <!-- <ng-container *ngIf="errorMessage">
+          <div *ngFor="let error of errorMessage.split(', ')" class="alert alert-danger mt-3">
+            {{ error }}
+          </div>
+        </ng-container> -->
+
+        <button class="w-100 btn btn-lg btn-primary transparent-button" type="submit">ENTER</button>
+      </form>
+    </div>
+  </div>
+</div>
