@@ -31,11 +31,17 @@ export class UserService {
     localStorage.setItem('access_token', user.accessToken);
     localStorage.setItem('user', JSON.stringify(user));
     this.userSubject.next(user.username);
+
+    // Set token expired after 5 minutes
+    setTimeout(() => {
+      this.setTokenExpired(true);
+    }, 1 * 60 * 1000);
   }
 
   logout() {
     localStorage.removeItem('access_token');
     localStorage.removeItem('user');
     this.userSubject.next('');
+    this.setTokenExpired(true);
   }
 }

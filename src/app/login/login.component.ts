@@ -36,6 +36,11 @@ export class LoginComponent implements OnInit, OnDestroy {
       usernameOrEmail: '',
       password: ''
     });
+
+    // Subscribe to tokenExpired$ and show modal when true is received
+    this.userService.tokenExpired$.subscribe(expired => {
+      this.isTokenExpired = expired;
+    });
   }
 
   ngOnDestroy(): void {
@@ -58,10 +63,10 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.snackBar.open('Account Logged In!', 'Close', {
           duration: 5000,
         });
-        // Set a timeout to show the modal after 5 seconds
+        // Set a timeout to show the modal
         setTimeout(() => {
           this.userService.setTokenExpired(true);
-        }, 300000); // Adjust this value to change the logout time
+        }, 60000); // Adjust this value to change the logout time
         this.errorMessage = ''; // Clear error message on successful login
       },
       error: (error) => {
@@ -69,8 +74,12 @@ export class LoginComponent implements OnInit, OnDestroy {
           this.startCountdown(30);
         } else {
           this.errorMessage = error.error.error;
+          if (error.error.remainingAttempts !== undefined) {
+            this.errorMessage += ` tries remaining: ${error.error.remainingAttempts}`;
+          }
           this.snackBar.open(this.errorMessage, 'Close', {
             duration: 5000,
+            panelClass: ['red-snackbar']
           });
         }
       }

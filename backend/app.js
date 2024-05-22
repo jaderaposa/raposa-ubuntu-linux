@@ -102,7 +102,7 @@ app.post("/api/login", async (req, res) => {
 			}
 			// Successful login
 			failedAttempts[usernameOrEmail] = { count: 0 }; // reset the counter
-			const accessToken = jwt.sign(user.toJSON(), process.env.ACCESS_TOKEN_SECRET, { expiresIn: "5m" });
+			const accessToken = jwt.sign(user.toJSON(), process.env.ACCESS_TOKEN_SECRET, { expiresIn: "60s" });
 			res.json({ message: "Login successful", accessToken: accessToken, user: user });
 		} else {
 			failedAttempts[usernameOrEmail] = failedAttempts[usernameOrEmail] || { count: 0 };
