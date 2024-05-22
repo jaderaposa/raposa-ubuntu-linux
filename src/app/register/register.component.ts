@@ -48,9 +48,7 @@ export class RegisterComponent implements OnInit {
       .subscribe({
         next: () => {
           this.router.navigate(['/login']);
-          this.snackBar.open('Account has been registered!', 'Close', {
-            duration: 5000,
-          });
+          this.snackBar.open('Account has been registered! Make sure to confirm your account first before logging in.', 'Close');
         },
         error: (err) => {
           this.errorMessage = err.error.errors.join(', ');

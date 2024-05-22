@@ -8,10 +8,20 @@ const multer = require("multer");
 const path = require("path"); // Add this line
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs"); // For hashing passwords
+const nodemailer = require("nodemailer");
+const crypto = require("crypto");
 
 require("dotenv").config(); // This line loads the .env file
 
 const app = express();
+
+const transporter = nodemailer.createTransport({
+	service: "gmail",
+	auth: {
+		user: process.env.EMAIL,
+		pass: process.env.PASSWORD,
+	},
+});
 
 mongoose
 	.connect(process.env.MONGODB_URI)
@@ -83,8 +93,13 @@ app.post("/api/login", async (req, res) => {
 		return res.status(400).json({ error: "Username/Email does not exist" });
 	}
 
+
 	try {
-		if (await bcrypt.compare(req.body.password, user.password)) {
+    if (await bcrypt.compare(req.body.password, user.password)) {
+			// Check if the user's account is verified
+			if (!user.isVerified) {
+				return res.status(401).json({ error: "Your account has not been verified. Please check your email for a verification link." });
+			}
 			// Successful login
 			failedAttempts[usernameOrEmail] = { count: 0 }; // reset the counter
 			const accessToken = jwt.sign(user.toJSON(), process.env.ACCESS_TOKEN_SECRET, { expiresIn: "5m" });
@@ -99,11 +114,13 @@ app.post("/api/login", async (req, res) => {
 				return res.status(429).json({ error: `Too many failed attempts. Try again in ${remainingTime} seconds.` });
 			}
 
-			res.status(403).json({ error: "Wrong password" });
+			const remainingAttempts = MAX_ATTEMPTS - failedAttempts[usernameOrEmail].count;
+			res.status(403).json({ error: "Wrong password,", remainingAttempts: remainingAttempts });
 		}
 	} catch (err) {
 		res.status(500).json({ error: err.message });
-	}
+  }
+
 });
 
 // Register route
@@ -126,17 +143,62 @@ app.post("/api/register", async (req, res) => {
 			return res.status(400).send({ errors: errors });
 		}
 
+		// Create a new user
 		const user = new User({
 			username: req.body.username,
 			email: req.body.email,
 			password: req.body.password,
 		});
+
+		// Generate a token
+		const token = crypto.randomBytes(20).toString("hex");
+
+		// Save the token to the user's document
+		user.token = token;
+
+		// Save the user
 		const savedUser = await user.save();
+
+		// Send the token to the user's email
+		const mailOptions = {
+			from: process.env.EMAIL, // This is your email
+			to: user.email, // This is the user's email
+			subject: "Account Verification",
+			text: `Please verify your account by clicking the following link: http://localhost:3000/api/verify?token=${token}`,
+		};
+
+		transporter.sendMail(mailOptions, function (error, info) {
+			if (error) {
+				console.log(error);
+			} else {
+				console.log("Email sent: " + info.response);
+			}
+		});
+
 		res.send(savedUser);
 	} catch (err) {
-		console.error(err);
-		res.status(500).send({ error: err.message });
+        console.error(err);
+        res.status(500).send({ error: err.message });
+    }
+});
+
+app.get("/api/verify", async (req, res) => {
+	// Get the token from the query parameters
+	const token = req.query.token;
+
+	// Find the user with this token
+	const user = await User.findOne({ token: token });
+
+	if (!user) {
+		return res.status(400).send("Invalid token.");
 	}
+
+	// Verify the user's account
+	user.isVerified = true;
+	user.token = undefined; // Remove the token as it's no longer needed
+	await user.save();
+
+	res.send("Your account has been verified. You can now log in.");
 });
 
 app.post("/api/posts", authenticateToken, (req, res, next) => {

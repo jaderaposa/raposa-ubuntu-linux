@@ -28,3 +28,11 @@ h1 {
   font-size: 2rem;
   color: red;
 }
+
+button.mat-mdc-snack-bar-action.mdc-snackbar__action.mdc-button.mat-mdc-button.mat-unthemed.mat-mdc-button-base {
+  background: transparent;
+  border-color: transparent;
+  color: red;
+  transition: color 0.3s ease;
+  font-family: 'Horror';
+}
