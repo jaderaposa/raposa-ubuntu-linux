@@ -5,13 +5,15 @@
         <h1 class="h3 mb-3 fw-normal text-center">FORGOT PASSWORD</h1>
         <div class="form-group mb-3">
           <label for="email">Email</label>
-          <input formControlName="email" type="email" class="form-control" id="email" placeholder="Enter your email"
-            required>
-          <button class="w-100 btn btn-lg btn-primary transparent-button" (click)="sendCode()">SEND CODE</button>
+          <div class="d-flex">
+            <input formControlName="email" type="email" class="form-control input-size" id="email"
+              placeholder="Enter your email" required>
+            <button class="btn btn-lg btn-primary transparent-button" (click)="sendCode()">SEND</button>
+          </div>
         </div>
         <div class="form-group mb-3">
           <label for="code">Reset Code</label>
-          <input formControlName="code" type="text" class="form-control" id="code"
+          <input formControlName="code" type="text" class="form-control input-size" id="code"
             placeholder="Enter the code sent to your email" required>
         </div>
         <button class="w-100 btn btn-lg btn-primary transparent-button" type="submit">SUBMIT</button>

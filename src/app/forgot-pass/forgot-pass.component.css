@@ -51,3 +51,8 @@ button.transparent-button:focus {
 .form-group label {
   margin-bottom: 5px;
 }
+
+.input-size {
+  height: 40px;
+  /* Adjust this value to match the height of the reset code input box */
+}
