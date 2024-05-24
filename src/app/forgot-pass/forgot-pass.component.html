@@ -1,0 +1,21 @@
+<div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+  <div class="card transparent-card" style="max-width: 500px;">
+    <div class="card-body">
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <h1 class="h3 mb-3 fw-normal text-center">FORGOT PASSWORD</h1>
+        <div class="form-group mb-3">
+          <label for="email">Email</label>
+          <input formControlName="email" type="email" class="form-control" id="email" placeholder="Enter your email"
+            required>
+          <button class="w-100 btn btn-lg btn-primary transparent-button" (click)="sendCode()">SEND CODE</button>
+        </div>
+        <div class="form-group mb-3">
+          <label for="code">Reset Code</label>
+          <input formControlName="code" type="text" class="form-control" id="code"
+            placeholder="Enter the code sent to your email" required>
+        </div>
+        <button class="w-100 btn btn-lg btn-primary transparent-button" type="submit">SUBMIT</button>
+      </form>
+    </div>
+  </div>
+</div>

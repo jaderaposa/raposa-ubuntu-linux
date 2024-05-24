@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -7,7 +7,8 @@ import { BehaviorSubject } from 'rxjs';
 export class UserService {
   private userSubject = new BehaviorSubject<string>('');
   private tokenExpiredSubject = new BehaviorSubject<boolean>(false);
-
+  private tokenExpirationTimeoutId: any;
+  private manualLogout = false; // Add this line
 
   constructor() {
     const userItem = localStorage.getItem('user');
@@ -24,6 +25,7 @@ export class UserService {
   }
 
   setTokenExpired(value: boolean) {
+    console.log('Token expired value set to:', value);
     this.tokenExpiredSubject.next(value);
   }
 
@@ -32,16 +34,35 @@ export class UserService {
     localStorage.setItem('user', JSON.stringify(user));
     this.userSubject.next(user.username);
 
-    // Set token expired after 5 minutes
-    setTimeout(() => {
+    // Clear any existing timeout
+    if (this.tokenExpirationTimeoutId) {
+      clearTimeout(this.tokenExpirationTimeoutId);
+    }
+
+    // Set token expired after 1 minute/s
+    this.tokenExpirationTimeoutId = setTimeout(() => {
       this.setTokenExpired(true);
     }, 1 * 60 * 1000);
   }
 
-  logout() {
+  logout(manualLogout: boolean = false) {
     localStorage.removeItem('access_token');
     localStorage.removeItem('user');
     this.userSubject.next('');
-    this.setTokenExpired(true);
+
+    this.manualLogout = manualLogout; // Add this line
+
+    if (!manualLogout) {
+      this.setTokenExpired(true);
+    }
+
+    if (this.tokenExpirationTimeoutId) {
+      clearTimeout(this.tokenExpirationTimeoutId);
+      this.tokenExpirationTimeoutId = null;
+    }
+  }
+
+  isManualLogout() { // Add this method
+    return this.manualLogout;
   }
 }

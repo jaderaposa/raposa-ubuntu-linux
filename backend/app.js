@@ -201,6 +201,99 @@ app.get("/api/verify", async (req, res) => {
 	res.send("Your account has been verified. You can now log in.");
 });
 
+
+app.post("/api/send-reset-code", async (req, res) => {
+	const { email } = req.body;
+
+	let user;
+	try {
+		user = await User.findOne({ email });
+	} catch (error) {
+		console.error(error);
+		return res.status(500).json({ error: "Failed to retrieve user." });
+	}
+
+	if (!user) {
+		return res.status(400).json({ error: "User with this email does not exist." });
+	}
+
+	// Generate a reset token
+	const resetToken = crypto.randomBytes(20).toString("hex");
+
+	// Save the reset token to the user's document
+	user.resetToken = resetToken;
+	try {
+		await user.save();
+	} catch (error) {
+		console.error(error);
+		return res.status(500).json({ error: "Failed to save reset token." });
+	}
+
+	// Send the reset token to the user's email
+	const mailOptions = {
+		from: process.env.EMAIL,
+		to: user.email,
+		subject: "Password Reset Code",
+		text: `Your password reset code is: ${resetToken}`,
+	};
+
+	transporter.sendMail(mailOptions, function (error, info) {
+		if (error) {
+			console.log(error);
+			return res.status(500).json({ error: "Failed to send email." });
+		} else {
+			console.log("Email sent: " + info.response);
+			return res.json({ message: "Password reset code sent." });
+		}
+	});
+});
+
+app.post("/api/validate-reset-code", async (req, res) => {
+	const { email, code } = req.body;
+
+	let user;
+	try {
+		user = await User.findOne({ email });
+	} catch (error) {
+		console.error(error);
+		return res.status(500).json({ error: "Failed to retrieve user." });
+	}
+
+	if (!user || !user.resetToken || user.resetToken.toString().toLowerCase() !== code.toString().toLowerCase()) {
+		return res.status(400).json({ error: "Invalid reset code." });
+	}
+
+	// The reset code is valid, allow the user to reset their password
+	res.json({ message: "Reset code is valid." });
+});
+
+app.post("/api/reset-password", async (req, res) => {
+	try {
+		const { email, newPassword } = req.body;
+
+		// Validate input
+		if (!email || !newPassword) {
+			return res.status(400).json({ error: "Email and password are required." });
+		}
+
+		const user = await User.findOne({ email });
+
+		if (!user) {
+			return res.status(400).json({ error: "User with this email does not exist." });
+		}
+
+		// Update the user's password
+		user.password = newPassword;
+		await user.save();
+
+		res.json({ message: "Your password has been reset. You can now log in." });
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ error: "Server error." });
+	}
+});
+
+
 app.post("/api/posts", authenticateToken, (req, res, next) => {
 	const url = req.protocol + "://" + req.get("host");
 	let imagePath = null;

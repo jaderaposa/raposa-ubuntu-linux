@@ -53,7 +53,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   logout(): void {
-    this.userService.logout();
+    this.userService.logout(true); // Indicate that it's a manual logout
     this.router.navigate(['/login']);
     this.snackBar.open('Account Logged Out :(', 'Close', {
       duration: 5000,

@@ -26,9 +26,11 @@ import { AuthGuard } from "./guards/auth.guard";
 import { MatDialogModule } from '@angular/material/dialog';
 import { DatePipe } from '@angular/common';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { ForgotPassComponent } from './forgot-pass/forgot-pass.component';
+import { ChangePassComponent } from './change-pass/change-pass.component';
 
 @NgModule({
-	declarations: [AppComponent, PostCreateComponent, HeaderComponent, PostListComponent, LoginComponent, RegisterComponent],
+	declarations: [AppComponent, PostCreateComponent, HeaderComponent, PostListComponent, LoginComponent, RegisterComponent, ForgotPassComponent, ChangePassComponent],
 	imports: [
 		BrowserModule,
 		AppRoutingModule,

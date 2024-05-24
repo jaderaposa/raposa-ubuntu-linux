@@ -7,6 +7,7 @@ const UserSchema = new mongoose.Schema({
 	password: { type: String, required: true },
 	isVerified: { type: Boolean, default: false }, // Add this line
 	token: { type: String }, // Add this line
+	resetToken: String,
 });
 
 UserSchema.pre("save", async function (next) {

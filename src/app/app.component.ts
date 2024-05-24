@@ -16,8 +16,15 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(private userService: UserService, private router: Router) { }
 
   ngOnInit() {
+    this.subscribeToTokenExpired();
+  }
+
+  subscribeToTokenExpired() {
     this.tokenExpiredSubscription = this.userService.tokenExpired$.subscribe(expired => {
-      this.isTokenExpired = expired;
+      console.log('Token expired value received:', expired);
+      if (!this.userService.isManualLogout()) { // Check if it's not a manual logout
+        this.isTokenExpired = expired;
+      }
     });
   }
 
@@ -28,8 +35,15 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   onOkClick() {
-    this.userService.logout();
     this.isTokenExpired = false; // hide the modal
+    this.userService.logout(true); // Indicate that it's a manual logout
+
+    // Unsubscribe from tokenExpired$ to prevent isTokenExpired from being set to true
+    if (this.tokenExpiredSubscription) {
+      this.tokenExpiredSubscription.unsubscribe();
+    }
+
+    // Navigate to the login page
     this.router.navigate(['/login']);
   }
 }

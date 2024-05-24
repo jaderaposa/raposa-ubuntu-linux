@@ -4,12 +4,12 @@
       <form [formGroup]="form" (submit)="submit()">
         <h1 class="h3 mb-3 fw-normal text-center">SIGN IN</h1>
         <div class="form-group mb-3">
-          <label for="usernameOrEmail">PARTICIPANT</label>
+          <label for="usernameOrEmail">USERNAME/EMAIL</label>
           <input formControlName="usernameOrEmail" type="text" class="form-control" id="usernameOrEmail"
             placeholder="Username or Email" required>
         </div>
         <div class="form-group mb-3">
-          <label for="password">SECRET KEY</label>
+          <label for="password">PASSWORD</label>
           <div class="input-group">
             <input [type]="hidePassword ? 'password' : 'text'" formControlName="password" id="password" class="form-control right-radius"
               placeholder="Password" required>

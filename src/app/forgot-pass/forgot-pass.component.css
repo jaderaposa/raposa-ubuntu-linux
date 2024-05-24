@@ -1,0 +1,53 @@
+h1 {
+  font-size: 2rem;
+  padding-bottom: 2rem;
+  color: red;
+}
+
+.transparent-card {
+  background: transparent;
+  border-color: transparent;
+  color: white;
+}
+
+.transparent-button {
+  background: transparent;
+  border-color: transparent;
+  color: red;
+  transition: color 0.3s ease;
+  font-family: 'HelpMe';
+}
+
+button.transparent-button:hover {
+  color: #cccccc;
+  background: transparent;
+  background: transparent;
+  outline: white;
+  box-shadow: none;
+}
+
+button.transparent-button:active,
+button.transparent-button:focus {
+  color: #999999 !important;
+  background: transparent !important;
+  outline: none !important;
+  box-shadow: none !important;
+  --bs-btn-color: #999999 !important;
+  --bs-btn-bg: transparent !important;
+  --bs-btn-border-color: transparent !important;
+  --bs-btn-hover-color: #999999 !important;
+  --bs-btn-hover-bg: transparent !important;
+  --bs-btn-hover-border-color: transparent !important;
+  --bs-btn-focus-shadow-rgb: 0, 0, 0 !important;
+  --bs-btn-active-color: #999999 !important;
+  --bs-btn-active-bg: transparent !important;
+  --bs-btn-active-border-color: transparent !important;
+  --bs-btn-active-shadow: none !important;
+  --bs-btn-disabled-color: #999999 !important;
+  --bs-btn-disabled-bg: transparent !important;
+  --bs-btn-disabled-border-color: transparent !important;
+}
+
+.form-group label {
+  margin-bottom: 5px;
+}

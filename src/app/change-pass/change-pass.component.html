@@ -1,0 +1,31 @@
+<div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+  <div class="card transparent-card" style="max-width: 500px;">
+    <div class="card-body">
+      <form [formGroup]="form" (submit)="submit()">
+        <h1 class="h3 mb-3 fw-normal text-center">CHANGE PASSWORD</h1>
+        <div class="form-group mb-3">
+          <label for="newPassword">New Password</label>
+          <div class="input-group">
+            <input [type]="hideNewPassword ? 'password' : 'text'" formControlName="newPassword" id="newPassword"
+              class="form-control right-radius" placeholder="New Password" required>
+            <button mat-icon-button type="button" (click)="hideNewPassword = !hideNewPassword" class="toggle-password eye-icon">
+              <mat-icon>{{hideNewPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+          </div>
+        </div>
+        <div class="form-group mb-3">
+          <label for="confirmPassword">Confirm Password</label>
+          <div class="input-group">
+            <input [type]="hideConfirmPassword ? 'password' : 'text'" formControlName="confirmPassword" id="confirmPassword"
+              class="form-control right-radius" placeholder="Confirm Password" required>
+            <button mat-icon-button type="button" (click)="hideConfirmPassword = !hideConfirmPassword"
+              class="toggle-password eye-icon">
+              <mat-icon>{{hideConfirmPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+          </div>
+        </div>
+        <button class="w-100 btn btn-lg btn-primary transparent-button" type="submit">SUBMIT</button>
+      </form>
+    </div>
+  </div>
+</div>
