@@ -124,59 +124,75 @@ app.post("/api/login", async (req, res) => {
 });
 
 // Register route
+// Register route
 app.post("/api/register", async (req, res) => {
-	try {
-		let errors = [];
-		if (!req.body.username || req.body.username.length < 3) {
-			errors.push("Username must be at least 3 characters.");
-		}
-		if (!req.body.email || !req.body.email.includes("@")) {
-			errors.push("Invalid email.");
-		}
-		if (!req.body.password || req.body.password.length < 6) {
-			errors.push("Password must be at least 6 characters.");
-		}
-		if (req.body.password !== req.body.confirmPassword) {
-			errors.push("Passwords do not match.");
-		}
-		if (errors.length > 0) {
-			return res.status(400).send({ errors: errors });
-		}
+    try {
+        let errors = [];
+        if (!req.body.username || req.body.username.length < 3) {
+            errors.push("Username must be at least 3 characters.");
+        }
+        if (!req.body.email || !req.body.email.includes("@")) {
+            errors.push("Invalid email.");
+        }
+        if (!req.body.password || req.body.password.length < 6) {
+            errors.push("Password must be at least 6 characters.");
+        }
+        if (req.body.password !== req.body.confirmPassword) {
+            errors.push("Passwords do not match.");
+        }
 
-		// Create a new user
-		const user = new User({
-			username: req.body.username,
-			email: req.body.email,
-			password: req.body.password,
-		});
+        // Check if username or email already exists
+        const existingUser = await User.findOne({
+            $or: [{ username: req.body.username }, { email: req.body.email }],
+        });
 
-		// Generate a token
-		const token = crypto.randomBytes(20).toString("hex");
+        if (existingUser) {
+            if (existingUser.username === req.body.username) {
+                errors.push("Username already exists.");
+            }
+            if (existingUser.email === req.body.email) {
+                errors.push("Email already exists.");
+            }
+        }
 
-		// Save the token to the user's document
-		user.token = token;
+        if (errors.length > 0) {
+            return res.status(400).send({ errors: errors });
+        }
 
-		// Save the user
-		const savedUser = await user.save();
+        // Create a new user
+        const user = new User({
+            username: req.body.username,
+            email: req.body.email,
+            password: req.body.password,
+        });
 
-		// Send the token to the user's email
-		const mailOptions = {
-			from: process.env.EMAIL, // This is your email
-			to: user.email, // This is the user's email
-			subject: "Account Verification",
-			text: `Please verify your account by clicking the following link: http://localhost:3000/api/verify?token=${token}`,
-		};
+        // Generate a token
+        const token = crypto.randomBytes(20).toString("hex");
 
-		transporter.sendMail(mailOptions, function (error, info) {
-			if (error) {
-				console.log(error);
-			} else {
-				console.log("Email sent: " + info.response);
-			}
-		});
+        // Save the token to the user's document
+        user.token = token;
 
-		res.send(savedUser);
-	} catch (err) {
+        // Save the user
+        const savedUser = await user.save();
+
+        // Send the token to the user's email
+        const mailOptions = {
+            from: process.env.EMAIL, // This is your email
+            to: user.email, // This is the user's email
+            subject: "Account Verification",
+            text: `Please verify your account by clicking the following link: http://localhost:3000/api/verify?token=${token}`,
+        };
+
+        transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log("Email sent: " + info.response);
+            }
+        });
+
+        res.send(savedUser);
+    } catch (err) {
         console.error(err);
         res.status(500).send({ error: err.message });
     }

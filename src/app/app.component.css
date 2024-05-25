@@ -16,5 +16,9 @@ main {
 }
 
 .modal mat-card {
-  padding: 20px;
+  padding: 1rem;
+}
+
+.modal button {
+  margin: 0.5rem 0;
 }
