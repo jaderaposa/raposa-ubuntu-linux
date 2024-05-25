@@ -19,6 +19,12 @@ export class AppComponent implements OnInit, OnDestroy {
     this.subscribeToTokenExpired();
   }
 
+  ngOnDestroy() {
+    if (this.tokenExpiredSubscription) {
+      this.tokenExpiredSubscription.unsubscribe();
+    }
+  }
+
   subscribeToTokenExpired() {
     this.tokenExpiredSubscription = this.userService.tokenExpired$.subscribe(expired => {
       console.log('Token expired value received:', expired);
@@ -28,20 +34,10 @@ export class AppComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy() {
-    if (this.tokenExpiredSubscription) {
-      this.tokenExpiredSubscription.unsubscribe();
-    }
-  }
-
   onOkClick() {
     this.isTokenExpired = false; // hide the modal
+    this.userService.resetTokenExpiration(); // reset token expiration
     this.userService.logout(true); // Indicate that it's a manual logout
-
-    // Unsubscribe from tokenExpired$ to prevent isTokenExpired from being set to true
-    if (this.tokenExpiredSubscription) {
-      this.tokenExpiredSubscription.unsubscribe();
-    }
 
     // Navigate to the login page
     this.router.navigate(['/login']);

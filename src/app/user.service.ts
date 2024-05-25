@@ -29,6 +29,10 @@ export class UserService {
     this.tokenExpiredSubject.next(value);
   }
 
+  resetTokenExpiration() {
+    this.tokenExpiredSubject.next(false);
+  }
+
   login(user: any) {
     localStorage.setItem('access_token', user.accessToken);
     localStorage.setItem('user', JSON.stringify(user));
@@ -39,10 +43,11 @@ export class UserService {
       clearTimeout(this.tokenExpirationTimeoutId);
     }
 
-    // Set token expired after 1 minute/s
+    // Start a new timeout to automatically log out the user after 1 minute
     this.tokenExpirationTimeoutId = setTimeout(() => {
+      this.logout();
       this.setTokenExpired(true);
-    }, 1 * 60 * 1000);
+    }, 60000); // 60000 milliseconds = 1 minute
   }
 
   logout(manualLogout: boolean = false) {
@@ -50,15 +55,14 @@ export class UserService {
     localStorage.removeItem('user');
     this.userSubject.next('');
 
-    this.manualLogout = manualLogout; // Add this line
-
-    if (!manualLogout) {
-      this.setTokenExpired(true);
-    }
-
     if (this.tokenExpirationTimeoutId) {
       clearTimeout(this.tokenExpirationTimeoutId);
       this.tokenExpirationTimeoutId = null;
+    }
+
+    // If it's a manual logout, set tokenExpired to false
+    if (manualLogout) {
+      this.setTokenExpired(false);
     }
   }
 
